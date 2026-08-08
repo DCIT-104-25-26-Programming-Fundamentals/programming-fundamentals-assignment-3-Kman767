@@ -68,5 +68,143 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+
+
 const readlineSync = require('readline-sync');
+ 
+function readMatrix(label) {
+  console.log(`\n-- ${label} --`);
+  const rows = parseInt(readlineSync.question('Enter number of rows: '), 10);
+  const cols = parseInt(readlineSync.question('Enter number of columns: '), 10);
+ 
+  const matrix = [];
+  for (let i = 0; i < rows; i++) {
+    let row;
+    while (true) {
+      row = readlineSync
+        .question(`Enter row ${i + 1}: `)
+        .trim()
+        .split(/\s+/)
+        .map(Number);
+ 
+      if (row.length === cols && row.every((n) => !Number.isNaN(n))) {
+        break;
+      }
+      console.log(`Please enter exactly ${cols} numbers separated by spaces.`);
+    }
+    matrix.push(row);
+  }
+  return matrix;
+}
+ 
+function printMatrix(matrix, title) {
+  console.log(`\n${title}`);
+  const width = Math.max(...matrix.flat().map((n) => n.toString().length));
+  for (const row of matrix) {
+    console.log(row.map((n) => n.toString().padStart(width + 2)).join(''));
+  }
+}
+ 
+
+function transpose(matrix) {
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const result = [];
+ 
+  for (let j = 0; j < cols; j++) {
+    const newRow = [];
+    for (let i = 0; i < rows; i++) {
+      newRow.push(matrix[i][j]);
+    }
+    result.push(newRow);
+  }
+  return result;
+}
+ 
+
+function addMatrices(a, b) {
+  const rows = a.length;
+  const cols = a[0].length;
+ 
+  if (b.length !== rows || b[0].length !== cols) {
+    throw new Error('Matrices must be the same size to add them.');
+  }
+ 
+  const result = [];
+  for (let i = 0; i < rows; i++) {
+    const row = [];
+    for (let j = 0; j < cols; j++) {
+      row.push(a[i][j] + b[i][j]);
+    }
+    result.push(row);
+  }
+  return result;
+}
+ 
+
+function multiplyMatrices(a, b) {
+  const rowsA = a.length;
+  const colsA = a[0].length;
+  const rowsB = b.length;
+  const colsB = b[0].length;
+ 
+  if (colsA !== rowsB) {
+    throw new Error('Number of columns in A must equal number of rows in B.');
+  }
+ 
+  const result = [];
+  for (let i = 0; i < rowsA; i++) {
+    const row = [];
+    for (let j = 0; j < colsB; j++) {
+      let sum = 0;
+      for (let k = 0; k < colsA; k++) {
+        sum += a[i][k] * b[k][j];
+      }
+      row.push(sum);
+    }
+    result.push(row);
+  }
+  return result;
+}
+ 
+function partA() {
+  console.log('\n=== PART A: Transpose a Matrix ===');
+  const matrix = readMatrix('Matrix');
+  printMatrix(matrix, 'Original Matrix:');
+  printMatrix(transpose(matrix), 'Transposed Matrix:');
+}
+ 
+function partB() {
+  console.log('\n=== PART B: Add Two Matrices ===');
+  const a = readMatrix('Matrix A');
+  const b = readMatrix('Matrix B (must match size of A)');
+  printMatrix(a, 'Matrix A:');
+  printMatrix(b, 'Matrix B:');
+  try {
+    printMatrix(addMatrices(a, b), 'Sum (A + B):');
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+  }
+}
+ 
+function partC() {
+  console.log('\n=== PART C: Multiply Two Matrices ===');
+  const a = readMatrix('Matrix A (M x N)');
+  const b = readMatrix('Matrix B (N x P)');
+  printMatrix(a, 'Matrix A:');
+  printMatrix(b, 'Matrix B:');
+  try {
+    printMatrix(multiplyMatrices(a, b), 'Product (A x B):');
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+  }
+}
+ 
+function main() {
+  partA();
+  partB();
+  partC();
+}
+ 
+main();
 

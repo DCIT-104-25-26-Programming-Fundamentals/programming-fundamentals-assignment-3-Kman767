@@ -44,3 +44,66 @@
 // =============================================================================
 
 
+const readLineSync = require("readline-sync");
+
+const userInput = readLineSync.questionInt("How many numbers? ");
+
+if (userInput <= 0){
+    console.log("Error: Number must be a positive integer.");
+    process.exit(1);
+}
+
+const numbers = [];
+
+for (let i = 0; i < userInput; i++) {
+    const num = readLineSync.questionInt(`Enter number ${i + 1}: `);
+    numbers.push(num);
+}
+
+
+function compute_sum (numbers) {
+    let total = 0;
+    for (let i = 0; i < numbers.length; i++) {
+        total += numbers[i];
+    }
+    return total;
+}
+function compute_average(numbers) {
+    return compute_sum(numbers) / numbers.length;
+}
+
+function compute_max(numbers) {
+    let largest = numbers[0];
+    for (let i = 0; i < numbers.length; i++) {
+        if (numbers[i] > largest) {
+            largest = numbers[i];
+        }
+    }
+    return largest;
+}
+
+function compute_min(numbers) {
+    let smallest = numbers[0];
+    for (let i = 0; i < numbers.length; i++) {
+        if (numbers[i] < smallest) {
+            smallest = numbers[i];
+        }
+    }
+    return smallest;
+}
+
+function main () {
+    const total = compute_sum(numbers);
+    const average = compute_average(numbers);
+    const largest = compute_max(numbers);
+    const smallest = compute_min(numbers);
+
+    console.log("Results:  ");
+    console.log(`Sum:     ${total}`);
+    console.log(`Average: ${average}`);
+    console.log(`Maximum: ${largest}`);
+    console.log(`Minimum: ${smallest}`);
+
+}
+
+main();
